@@ -1,9 +1,7 @@
-import advxml.instances.transform._
-import advxml.syntax.transform._
-import cats.instances.try_._
-
 import scala.util.Try
 import scala.xml.NodeSeq
+import cats.instances.try_._
+import advxml.implicits._
 
 val document =
   <Orders>
@@ -21,11 +19,12 @@ val document =
     </Order>
   </Orders>
 
-val result: Try[NodeSeq] = document.transform(
-    (
-      (root \ "Order" filter attrs(("Id", _ == "1")))
-      \ "OrderLines"
-      \ "OrderLine" filter attrs("Id" -> (_ == "2"))
-    ) ==> Append(<Node>new node!</Node>)
-  )
+val res1: NodeSeq = root.Order.filter(attrs(k"Id" === 1) || attrs(k"Id" === 2)).run[Try](document).get
 
+val result: Try[NodeSeq] = document.transform(
+  root.Order
+    .find(attrs(k"Id" === 1) || attrs(k"Id" === 2))
+    .OrderLines
+    .OrderLine
+    .find(attrs(k"Id" >= 2)) ==> Append(<Node>new node!</Node>)
+)

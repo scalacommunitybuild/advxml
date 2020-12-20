@@ -6,8 +6,7 @@ package advxml
  * - Each feature must provide a trait containing all feature instances named `[feature_name]Instances`
  * - For each object must be exist a package with the same name under `advxml`
  */
-/**
-  * This object is the entry point to access to all features instances provided by Advxml.
+/** This object is the entry point to access to all features instances provided by Advxml.
   *
   * You can import all instances using:
   * {{{
@@ -21,14 +20,16 @@ package advxml
   *   import advxml.instances.transform._
   * }}}
   */
-package object instances {
+package object instances extends AllCommonInstances {
+
   // format: off
   object all        extends AllInstances
-  object transform  extends XmlTransformerInstances {
+  //******************** FEATURES ********************
+  object transform  extends AllTransforInstances {
     object predicates extends XmlPredicateInstances
-    object modifiers extends AllXmlModifierInstances
+    object modifiers  extends XmlModifierInstances
   }
-  object convert    extends ConvertersInstances
-  object validate   extends ValidationInstance
+  object convert    extends ConverterInstances
+  object validated  extends ValidatedInstances
   // format: on
 }
